@@ -1,0 +1,23 @@
+{
+  "name": "seq",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^5.1.1",
+    "@tsconfig/svelte": "^5.0.8",
+    "@types/node": "^26.6.5",
+    "svelte": "^5.57.2",
+    "typescript": "^7.0.2",
+    "vite": "^6.4.5",
+    "vite-plugin-static-copy": "^3.4.0"
+  }
+}
