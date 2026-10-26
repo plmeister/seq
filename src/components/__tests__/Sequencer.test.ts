@@ -33,13 +33,13 @@ describe('Sequencer', () => {
 
   it('creates 8 rows × 16 cells = 128 cells', () => {
     render(Sequencer)
-    const cells = screen.getAllByRole('button', { name: /note .* step/i })
+    const cells = screen.getAllByRole('button', { name: /Track .* step/i })
     expect(cells).toHaveLength(128)
   })
 
   it('clicking a cell toggles it on/off', async () => {
     render(Sequencer)
-    const cells = screen.getAllByRole('button', { name: /note .* step/i })
+    const cells = screen.getAllByRole('button', { name: /Track .* step/i })
     const first = cells[0]
     expect(first.classList.contains('on')).toBe(false)
     await fireEvent.click(first)

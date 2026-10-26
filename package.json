@@ -7,7 +7,10 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "server:dev": "tsx server/index.ts",
+    "server:build": "esbuild server/index.ts --bundle --platform=node --format=esm --packages=external --outfile=dist-server/index.mjs",
+    "start": "node dist-server/index.mjs"
   },
   "keywords": [],
   "author": "",
@@ -18,12 +21,24 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/svelte": "^5.4.2",
     "@tsconfig/svelte": "^5.0.8",
+    "@types/express": "^5.0.6",
     "@types/node": "^26.6.5",
+    "@types/ws": "^8.18.2",
+    "esbuild": "^0.28.2",
     "jsdom": "^26.1.0",
     "svelte": "^5.57.2",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^6.4.5",
     "vite-plugin-static-copy": "^3.4.0",
     "vitest": "^3.2.7"
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "ws": "^8.22.0",
+    "y-protocols": "^1.0.7",
+    "y-websocket": "^3.1.0",
+    "yjs": "^13.6.33"
   }
 }
