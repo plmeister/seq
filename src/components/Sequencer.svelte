@@ -16,6 +16,7 @@
   function initCollab(r: string) {
     collab?.destroy()
     collab = new YjsSync(sequencerStore, { room: r })
+    await collab.initialise()
     if (collab.provider) {
       collab.provider.on('status', (event: any) => {
         connected = event.status === 'connected'
@@ -81,7 +82,7 @@
     <input type="text" bind:value={room} />
   </label>
   <button onclick={changeRoom}>Join</button>
-  <span class="status">{connected ? '● connected' : '○ offline'}</span>
+  <span class="status">{connected ? "● connected" : "○ offline"}</span>
 </div>
 
 <div class="grid">
@@ -90,7 +91,9 @@
       {#each track.steps as on, c (c)}
         <button
           aria-label="{track.name} step {c}"
-          class="cell {on ? 'on' : ''} {playing && currentStep === c ? 'current' : ''}"
+          class="cell {on ? 'on' : ''} {playing && currentStep === c
+            ? 'current'
+            : ''}"
           onclick={() => toggle(track.id, c)}
         ></button>
       {/each}
