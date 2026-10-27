@@ -10,7 +10,9 @@ function getBasePath(): Promise<string> | undefined {
   return (basePathPromise ??= fetch("./runtime-config")
     .then((r) => {
       if (!r.ok) throw new Error("Failed to fetch runtime config");
-      return r.json();
+      const x = r.json();
+      console.log(x);
+      return x;
     })
     .then((config) => (config.basePath ?? "").replace(/\/\+$/, ""))
     .catch((err) => {

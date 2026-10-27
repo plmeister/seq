@@ -1,73 +1,78 @@
 <script lang="ts">
-  import { sequencerStore } from '../lib/store/sequencer.svelte'
-  import { Player } from '../lib/engine/Player'
-  import { YjsSync } from '../lib/collab/YjsSync'
-  import { onDestroy } from 'svelte'
+  import { sequencerStore } from "../lib/store/sequencer.svelte";
+  import { Player } from "../lib/engine/Player";
+  import { YjsSync } from "../lib/collab/YjsSync";
+  import { onDestroy } from "svelte";
 
-  const seq = sequencerStore.sequence
-  let playing = $state(false)
-  let currentStep = $state(0)
-  const player = new Player()
-  
-  let room = $state(typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('room') || 'default' : 'default')
-  let collab: YjsSync | null = null
-  let connected = $state(false)
+  const seq = sequencerStore.sequence;
+  let playing = $state(false);
+  let currentStep = $state(0);
+  const player = new Player();
 
-  function initCollab(r: string) {
-    collab?.destroy()
-    collab = new YjsSync(sequencerStore, { room: r })
-    await collab.initialise()
+  let room = $state(
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search).get("room") || "default"
+      : "default",
+  );
+  let collab: YjsSync | null = null;
+  let connected = $state(false);
+
+  async function initCollab(r: string) {
+    collab?.destroy();
+    collab = new YjsSync(sequencerStore, { room: r });
+    await collab.initialise();
     if (collab.provider) {
-      collab.provider.on('status', (event: any) => {
-        connected = event.status === 'connected'
-      })
+      collab.provider.on("status", (event: any) => {
+        connected = event.status === "connected";
+      });
     }
   }
 
-  initCollab(room)
+  initCollab(room);
 
   function changeRoom() {
-    if (typeof window === 'undefined') return
-    const url = new URL(window.location.href)
-    url.searchParams.set('room', room)
-    window.history.pushState({}, '', url.toString())
-    initCollab(room)
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    url.searchParams.set("room", room);
+    window.history.pushState({}, "", url.toString());
+    initCollab(room);
   }
 
   function toggle(trackId: string, stepIndex: number) {
-    sequencerStore.toggleStep(trackId, stepIndex)
-    const track = seq.pattern.tracks.find(t => t.id === trackId)
-    if (track && collab) collab.pushToggle(trackId, stepIndex, track.steps[stepIndex])
+    sequencerStore.toggleStep(trackId, stepIndex);
+    const track = seq.pattern.tracks.find((t) => t.id === trackId);
+    if (track && collab)
+      collab.pushToggle(trackId, stepIndex, track.steps[stepIndex]);
   }
 
   $effect(() => {
-    if (collab) collab.pushBpm(seq.bpm)
-  })
+    if (collab) collab.pushBpm(seq.bpm);
+  });
 
-  onDestroy(() => collab?.destroy())
+  onDestroy(() => collab?.destroy());
 
   $effect(() => {
     if (!playing) {
-      currentStep = 0
-      player.stop()
-      return
+      currentStep = 0;
+      player.stop();
+      return;
     }
 
-    const ms = (60000 / seq.bpm) / 4
+    const ms = 60000 / seq.bpm / 4;
     const id = window.setInterval(() => {
       for (const track of seq.pattern.tracks) {
         if (track.steps[currentStep]) {
-          player['synth']?.play(track.note)
+          player["synth"]?.play(track.note);
         }
       }
-      currentStep = (currentStep + 1) % seq.pattern.length
-    }, ms)
+      currentStep = (currentStep + 1) % seq.pattern.length;
+    }, ms);
 
     return () => {
-      window.clearInterval(id)
-      player.stop()
-    }
-  })
+      window.clearInterval(id);
+      player.stop();
+    };
+  });
 </script>
 
 <div class="controls">

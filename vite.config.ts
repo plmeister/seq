@@ -1,11 +1,16 @@
-import { defineConfig } from 'vite'
-import { svelte } from '@sveltejs/vite-plugin-svelte'
+import { defineConfig } from "vite";
+import { svelte } from "@sveltejs/vite-plugin-svelte";
 
 export default defineConfig({
-  base: './',
+  base: "./",
   plugins: [svelte()],
   build: {
-    outDir: 'dist',
+    outDir: "dist",
     emptyOutDir: true,
   },
-})
+  server: {
+    proxy: {
+      "/runtime-config": "http://localhost:3000",
+    },
+  },
+});
