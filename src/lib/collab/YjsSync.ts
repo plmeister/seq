@@ -2,7 +2,7 @@ import * as Y from "yjs";
 import { WebsocketProvider } from "y-websocket";
 import { Awareness } from "y-protocols/awareness";
 import type { SequencerStore } from "../store/sequencer.svelte";
-import type { Track } from "../models/types";
+import type { Track } from "../models";
 
 let basePathPromise: Promise<string> | undefined;
 
@@ -63,7 +63,7 @@ export class YjsSync {
     // preserve the base path if the app is served from a subdirectory
     const basePath = await getBasePath(); // Assume getBasePath is defined elsewhere to fetch the base path
 
-    url.pathname = `${basePath}ws`.replace(/\/\+/g, "/");
+    url.pathname = `${basePath}/ws`.replace(/\/\+/g, "/");
     url.search = "";
     url.hash = "";
 

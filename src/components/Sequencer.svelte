@@ -2,6 +2,9 @@
   import { sequencerStore } from "../lib/store/sequencer.svelte";
   import { Player } from "../lib/engine/Player";
   import { YjsSync } from "../lib/collab/YjsSync";
+  import { projectStore } from "../lib/store/project.svelte";
+  import PatternLibrary from "./PatternLibrary.svelte";
+  import PatternEditor from "./PatternEditor.svelte";
   import { onDestroy } from "svelte";
 
   const seq = sequencerStore.sequence;
@@ -17,6 +20,8 @@
   let collab: YjsSync | null = null;
   let connected = $state(false);
 
+  let selectedPatternId = $state<string | null>(null);
+
   async function initCollab(r: string) {
     collab?.destroy();
     collab = new YjsSync(sequencerStore, { room: r });
@@ -25,6 +30,11 @@
       collab.provider.on("status", (event: any) => {
         connected = event.status === "connected";
       });
+    }
+    projectStore.ensureDefaults(r);
+    const pats = projectStore.getPatterns();
+    if (pats.length > 0 && !selectedPatternId) {
+      selectedPatternId = pats[0].id;
     }
   }
 
@@ -106,7 +116,25 @@
   {/each}
 </div>
 
+<section class="daw">
+  <PatternLibrary onSelect={(p) => (selectedPatternId = p.id)} />
+  {#if selectedPatternId}
+    <PatternEditor patternId={selectedPatternId} />
+  {:else}
+    <div class="placeholder">Select or create a pattern</div>
+  {/if}
+</section>
+
 <style>
+  .daw {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .placeholder {
+    padding: 16px;
+    color: #aaa;
+  }
   .controls {
     display: flex;
     gap: 1rem;

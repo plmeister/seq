@@ -1,5 +1,5 @@
 import { createSequence } from '../models/factories'
-import type { Sequence } from '../models/types'
+import type { Sequence } from '../models'
 
 export class SequencerStore {
   sequence = $state<Sequence>(createSequence())

@@ -1,5 +1,5 @@
 import { Synth } from '../audio'
-import type { Sequence } from '../models/types'
+import type { Sequence } from '../models'
 
 export class Player {
   private synth: Synth
